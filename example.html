@@ -19,20 +19,27 @@
 		<script src='gSoundEffect.js'></script>
 		
 		<script>
-			var beepSound = gSoundEffect.make([250,.5,350,.01,.4])
-			var gameOverSound = gSoundEffect.make([242,.3,202,.01,.02,  222,.3,182,.01,.02,  162,.5,162,.01,.05])
-			var coinSound = gSoundEffect.make([400,.05,400,.01,.01,  550,.2,550,.01,.16])
-			var clickDownSound = gSoundEffect.make([180,.1,160,.04,.04])
-			var clickUpSound = gSoundEffect.make([242,.06,366,.01,.02])
+			var beepSound = gSoundEffect.make([250, 350, .5, .01, .4])
+			var gameOverSound = gSoundEffect.make([
+				242, 202, .3, .01, .02,
+				222, 182, .3, .01, .02,
+				162, 162, .7, .01, .05
+			])
+			var coinSound = gSoundEffect.make([
+				400, 400, .05, .01, .01,
+				550, 550, .2, .01, .16
+			])
+			var clickDownSound = gSoundEffect.make([180, 160, .1, .04, .04])
+			var clickUpSound = gSoundEffect.make([242, 366, .06, .01, .02])
 			
 			function playRandom() {
-				var pitch = 100+Math.random()*900|0
-				var pitch2 = 100+Math.random()*900|0
-				var pitch3 = 100+Math.random()*900|0
+				var pitch = 200+Math.random()*700|0
+				var pitch2 = 200+Math.random()*700|0
+				var pitch3 = 200+Math.random()*700|0
 				gSoundEffect.play(gSoundEffect.make([
-					pitch, .05+Math.random()*.1, pitch, .01, .01,
-					pitch2, .05+Math.random()*.1, pitch2, .01, .01,
-					pitch3, .05+Math.random()*.1, pitch3, .01, .01,
+					pitch, pitch, .05+Math.random()*.1, .01, .01,
+					pitch2, pitch2, .05+Math.random()*.1, .01, .01,
+					pitch3, pitch3, .05+Math.random()*.1, .01, .01,
 				]))
 			}
 		</script>
