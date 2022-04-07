@@ -2,48 +2,40 @@ var gSoundEffect = {
 	context: new (window.AudioContext || webkitAudioContext)(),
 	//Pass in an array with [[starting frequency, ending frequency, duration (seconds), fade in (seconds), fade out (seconds)]]
 	//fade in + fade out must be less than duration. Adding fade doesn't make the note longer.
-	//Example major C note for 1 second: gSound.make([440,1,440,.1,.1])
-	//Example with 2 beeps: gSound.make([440,.5,440,.1,.1, 300,.5,300,.1,.1])
+	//Example major C note for 1 second: gSound.make([440,440,1,.1,.1])
 	make: function(notes) {
-		// Calculate total duration, since it might be multiple notes.
+		// Calculate total duration, adding up duration of each note.
 		var seconds = 0
 		for(var i=0; i<notes.length; i+=5) {
-			seconds += notes[i+1]
+			seconds += notes[i+2]
 		}
 		
 		// Make the array buffer.
 		var bytesPerSecond = this.context.sampleRate;
-		var fadeIn = bytesPerSecond * notes[3]
-		var fadeOut = bytesPerSecond * notes[notes.length-1]
-		var songLength = Math.round(bytesPerSecond * seconds + fadeIn+fadeOut)
+		var songLength = Math.round(bytesPerSecond * seconds)
 		var audioBuffer = this.context.createBuffer(1, songLength, bytesPerSecond)
 		
-		// Make 2 buffers so that notes can overlap a bit without overwriting the other.
+		// Make 2 buffers so that notes can overlap a bit without overwriting part of eachother.
 		var bytes = audioBuffer.getChannelData(0)
 		var bytes2 = new Float32Array(songLength)
 		
 		var songByteI = 0
+		var fadeIn = 0, fadeOut = 0
 		var pi2 = Math.PI*2
 		
 		// Each note uses 5 slots in the passed in array.
 		for(var i=0; i<notes.length; i+=5) {
-			seconds = notes[i+1]
-			var freq = notes[i]
-			var freq2 = notes[i+2]
-			
-			// Calculate how many array slots will be used for fade in / fade out of this note.
+			// Calculate how many buffer array slots will be used for fade in / fade out of this note.
 			fadeIn = bytesPerSecond * notes[i+3] | 0
 			// Overlap the fades of the notes.
-			if(songByteI) {
-				songByteI -= Math.min(fadeOut, fadeIn)
-			}
+			songByteI -= Math.min(fadeOut, fadeIn)
 			fadeOut = bytesPerSecond * notes[i+4] | 0
 			
 			// Calculate sine wave multiplier for start/end frequency.
-			var multiplier = pi2 * freq / bytesPerSecond
-			var multiplier2 = pi2 * freq2 / bytesPerSecond
+			var multiplier = pi2 * notes[i] / bytesPerSecond
+			var multiplier2 = pi2 * notes[i+1] / bytesPerSecond
 			
-			var noteLen = bytesPerSecond * seconds | 0
+			var noteLen = bytesPerSecond * notes[i+2] | 0
 			
 			// Alternate which buffer we are writing to.
 			var bytesForNote = i/5%2 ? bytes2 : bytes
@@ -72,6 +64,7 @@ var gSoundEffect = {
 		
 		return audioBuffer
 	},
+	// This is a generic function for playing JS audioBuffers.
 	play: function(audioBuffer) {
 		var source = this.context.createBufferSource()
 		if(!source) {
