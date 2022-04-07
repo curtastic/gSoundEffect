@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>gSoundEffect.js Demo</title>
+		<style>
+			button{display:block;margin:9px;font-family:segoe ui emoji}
+		</style>
+	</head>
+	<body>
+		<div style='margin:9px'>
+			gSoundEffect.js Demo
+		</div>
+		<button onclick='gSoundEffect.play(beepSound)'>Rising sound</button>
+		<button onclick='gSoundEffect.play(gameOverSound)'>Game over sound</button>
+		<button onclick='gSoundEffect.play(coinSound);this.innerText+="💰"'>Get coin!</button>
+		<button onclick='gSoundEffect.play(clickUpSound)' onmousedown='gSoundEffect.play(clickDownSound)'>Fun click down/up</button>
+		<button onclick='playRandom();this.innerText+="🤖"'>Keep clicking for random robot sounds!</button>
+		
+		<script src='gSoundEffect.js'></script>
+		
+		<script>
+			var beepSound = gSoundEffect.make([250,.5,350,.01,.4])
+			var gameOverSound = gSoundEffect.make([242,.3,202,.01,.02,  222,.3,182,.01,.02,  162,.5,162,.01,.05])
+			var coinSound = gSoundEffect.make([400,.05,400,.01,.01,  550,.2,550,.01,.16])
+			var clickDownSound = gSoundEffect.make([180,.1,160,.04,.04])
+			var clickUpSound = gSoundEffect.make([242,.06,366,.01,.02])
+			
+			function playRandom() {
+				var pitch = 100+Math.random()*900|0
+				var pitch2 = 100+Math.random()*900|0
+				var pitch3 = 100+Math.random()*900|0
+				gSoundEffect.play(gSoundEffect.make([
+					pitch, .05+Math.random()*.1, pitch, .01, .01,
+					pitch2, .05+Math.random()*.1, pitch2, .01, .01,
+					pitch3, .05+Math.random()*.1, pitch3, .01, .01,
+				]))
+			}
+		</script>
+	</body>
+</html>
